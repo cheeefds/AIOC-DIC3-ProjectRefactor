@@ -70,7 +70,7 @@
 ## Decisions
 
 ### 1. 語言模型與數值計算徹底分離 (Separation of Semantic Understanding and Deterministic Computation)
-- **決策**：LLM 僅負責將使用者自然語言問題解析為結構化查詢參數（Planner），以及將通過驗證的計算結果轉化為易讀之自然語言總結。所有資料檢索、過濾、統計計算、排序與規則判定，均由本機確定性 Python 程式碼執行。
+- **決策**：整合 Google AI Studio 之 **Gemini 2.5 Flash Lite** 模型（透過 `GEMINI_API_KEY` 於本機 `.env` 進行密鑰管理，並由 `.gitignore` 排除防止外洩）。LLM 僅負責將使用者自然語言問題解析為結構化查詢參數（Planner），以及將通過驗證的計算結果轉化為易讀之自然語言總結。所有資料檢索、過濾、統計計算、排序與規則判定，均由本機確定性 Python 程式碼執行；若 API 密鑰未設定或離線，系統具備純確定性模板之無縫降級回退（Deterministic Fallback）機制。
 - **考量理由**：避免 LLM 的數值幻覺與偽造引用，確保相同資料與問題在任何時候均產出完全一致的數值結果，便於自動化稽核與驗證。
 - **替代方案**：端到端自由推理 LLM（如僅透過 Prompt 注入原始資料），已被既有研究證實容易在時序計算與數值極值比對中出錯。
 

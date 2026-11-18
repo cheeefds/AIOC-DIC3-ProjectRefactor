@@ -1,0 +1,36 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+*.key
+credentials.json
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Large AQI data files
+data/raw/
+data/processed/*.csv
+data/fixtures/*.csv
+
+# Logs & temporary files
+*.log
+.cache/
+tmp/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
