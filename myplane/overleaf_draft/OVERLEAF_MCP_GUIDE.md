@@ -28,9 +28,8 @@ Model Context Protocol (MCP) 允許 AI 代理人直接與外部軟體、雲端�
                                ▼
   ┌─────────────────────────────────────────────────────────┐
   │         Overleaf Cloud Project (IEEE Conference)        │
-  │  - main.tex (IEEEtran 雙欄會議模板)                      │
+  │  - main.tex (IEEEtran 雙欄會議模板，純文本無依賴圖檔)   │
   │  - references.bib (14 篇文獻完整 BibTeX)                 │
-  │  - fig_architecture.png (系統 9 大階段視覺架構圖)       │
   └─────────────────────────────────────────────────────────┘
 ```
 
@@ -113,5 +112,4 @@ git push overleaf master
    - 內建帶行號之 **Algorithm 1 Pseudocode** 與文獻比較表 **Table I**。
 2. **[references.bib](file:///c:/Users/user/Downloads/fjdsflds/AIOC-DIC3-ProjectRefactor/myplane/overleaf_draft/references.bib)**：
    - 收錄 `ma2026multi` (npj Clean Air 2026)、`lee2025anomaly` (IEEE Access 2025)、`tzeng2023spatially` (Biometrics 2023)、`dong2025calibration` (STOTEN 2025)、`moenv2026aqi_historical` 等 14 篇完整 BibTeX 項目。
-3. **`fig_architecture.png`**：
-   - 系統 9 大處理階段高清資訊圖，直接由 LaTeX 的 `\includegraphics[width=0.92\textwidth]{fig_architecture.png}` 引用。
+   - 本草稿專案設計為**純文本無額外圖檔依賴（Zero Image Dependencies）**，直接由結構化文字清單、Table I、Table II 與 Algorithm 1 演算法虛擬碼自包含呈現，上傳 Overleaf 即可直接編譯完成。

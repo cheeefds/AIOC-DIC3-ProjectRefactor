@@ -112,15 +112,8 @@ In accordance with atmospheric physics and statutory guidelines, the proposed ag
 
 \section{System Architecture and Methodology}
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.92\textwidth]{fig_architecture.png}
-\caption{End-to-end system architecture of the Taiwan Air Quality Evidence Agent, illustrating the 9 operational processing stages, composite key indexing $(SiteId, DataCreationDate)$, deterministic toolchain, and the closed-loop Evidence Guard.}
-\label{fig:architecture}
-\end{figure*}
-
 \subsection{End-to-End Processing Stages}
-As illustrated in Fig.~\ref{fig:architecture}, the system processes queries across 9 formalized stages:
+The end-to-end framework processes incoming queries across 9 formalized operational stages:
 \begin{itemize}
     \item \textbf{Stage 1: User Question}: Ingestion of unstructured natural language input.
     \item \textbf{Stage 2: Planner}: Extraction of spatial entities, time intervals, target pollutants, and analytical intent via Google Gemini with fallback to deterministic regex heuristics.

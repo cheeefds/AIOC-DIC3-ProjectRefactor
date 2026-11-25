@@ -1,8 +1,8 @@
 ## 1. IEEE Conference Paper Draft (Overleaf Preparation)
 
-- [x] 1.1 撰寫標準 IEEEtran 雙欄 LaTeX 主文檔 `myplane/overleaf_draft/main.tex`，完整涵蓋 Abstract、五大核心設計、三大權衡、九大管線階段、14 行演算法虛擬碼與 60 題評測。
+- [x] 1.1 撰寫標準 IEEEtran 雙欄 LaTeX 主文檔 `myplane/overleaf_draft/main.tex`，純文字架構無圖檔依賴，完整涵蓋 Abstract、五大核心設計、三大權衡、九大管線階段、14 行演算法虛擬碼與 60 題評測。
 - [x] 1.2 建立標準 BibTeX 引用文獻庫 `myplane/overleaf_draft/references.bib`，納入 [1]~[14] 完整期刊、會議與環境部標準文獻。
-- [x] 1.3 轉換並置入系統架構視覺化圖表 `myplane/overleaf_draft/fig_architecture.png`，確保 LaTeX 編譯路徑相容。
+- [x] 1.3 設計純文字無圖檔相依架構，消除外置圖片編譯風險，上傳 Overleaf 即可直接成功編譯。
 
 ## 2. Overleaf MCP (Model Context Protocol) 整合與協作工具鏈
 

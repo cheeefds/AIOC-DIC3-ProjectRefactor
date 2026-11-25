@@ -18,15 +18,14 @@
     - `I. Introduction`（公衛背景、WHO 660 萬人死亡數據、ACL 2025 LLM 幻覺、四項專題貢獻）
     - `II. Related Work & Research Gap`（8 篇關鍵文獻比較表 Table I、文獻缺口分析）
     - `III. Core Design Principles & Trade-offs`（**五大核心設計思維**、**三大權衡架構決策**）
-    - `IV. System Architecture & Methodology`（**九大處理階段**、`(SiteId, DataCreationDate)` 唯一主鍵、**Algorithm 1 帶行號演算法虛擬碼**）
+    - `IV. System Architecture & Methodology`（**九大處理階段文字詳解**、`(SiteId, DataCreationDate)` 唯一主鍵、**Algorithm 1 帶行號演算法虛擬碼**）
     - `V. Implementation & Deterministic Engine`（資料清洗、13 組衝突隔離、4 筆 SiteId 空間修復、Gemini LLM + 雙機制降級、Evidence Guard 閉環查核）
     - `VI. Experimental Benchmark & Evaluation`（60 題台灣在地評測集：45 可回答 + 15 拒答、三種對照模式）
     - `VII. Results & Discussion`（效能比較 Table II、零數值幻覺與 100% 來源可追溯性）
     - `VIII. Limitations & Future Work`（資料時間涵蓋限制、未來即時 API 與微型感測器擴充）
     - `IX. Conclusion`（總結）
 - **`references.bib`**：標準 BibTeX 文獻庫，收錄 14 篇重點論文與法規標準（涵蓋 *npj Clean Air*, *IEEE Access*, *STOTEN*, *Biometrics*, WHO, U.S. EPA 等）。
-- **`fig_architecture.png`**：由提案資訊圖表轉出之高清架構圖，於 `main.tex` 中以雙欄跨欄圖表呈現。
-- **`OVERLEAF_MCP_GUIDE.md`**：詳細解說如何使用 Model Context Protocol (MCP) 與 GitHub 雙向同步工作流，支援 AI 代理人直接自動讀取編譯日誌、自動修復 LaTeX 與更新文獻。
+- **`OVERLEAF_MCP_GUIDE.md`**：詳細解說如何使用 Model Context Protocol (MCP) 與 GitHub 雙向同步工作流，支援 AI 代理人直接自動讀取編譯日誌、自動修復 LaTeX 與更新文獻。本草稿專案為**純文字無額外圖檔依賴（Zero Image Dependencies）**，開箱即編譯。
 
 ---
 

@@ -7,7 +7,7 @@ Following the successful completion of the DIC3 prototype and benchmark implemen
 3. Spec-Driven Development (OpenSpec) operationalized directly on GitHub via automated GitHub Actions CI workflows, pull-request-driven spec verification, and version-controlled system specifications.
 
 ## 2. Proposed Changes
-- **Overleaf Draft Suite**: Create `myplane/overleaf_draft/` containing `main.tex`, `references.bib`, and high-resolution architecture diagrams (`fig_architecture.png`), formatted to two-column IEEE conference standards.
+- **Overleaf Draft Suite**: Create `myplane/overleaf_draft/` containing `main.tex` and `references.bib`, formatted to two-column IEEE conference standards with zero external image dependencies for instant clean compilation.
 - **MCP Overleaf Integration**: Provide configuration and operational protocols for connecting Model Context Protocol (MCP) servers to Overleaf and Git repositories, enabling autonomous agents to read LaTeX build errors, edit paper sections, and verify citations.
 - **GitHub OpenSpec Pipeline**: Deploy GitHub Actions CI workflow (`.github/workflows/openspec-verify.yml`) to automatically validate OpenSpec changes and main specifications on every branch push and pull request.
 - **OpenSpec Lifecycle Synchronization**: Synchronize all baseline capabilities into `openspec/specs/` and establish this DIC4 change artifact set for full transparency on GitHub.
