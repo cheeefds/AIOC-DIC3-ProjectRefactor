@@ -32,22 +32,20 @@
 ## 📌 需求二：OpenSpec on GitHub
 
 ### 1. 建立並同步主規格庫 (Main Specs on GitHub)
-已將系統 6 大核心能力正式同步至 [myplane/openspec/specs/](file:///c:/Users/user/Downloads/fjdsflds/AIOC-DIC3-ProjectRefactor/myplane/openspec/specs/)，成為 GitHub 上的永久權威依據：
+已將系統 8 大核心能力全數合併收錄至 [myplane/openspec/specs/](file:///c:/Users/user/Downloads/fjdsflds/AIOC-DIC3-ProjectRefactor/myplane/openspec/specs/)，消除所有重複規格，成為 GitHub 上的權威單一事實來源：
 1. `agent-workflow/spec.md`：Agent 互動週期、結構化解析與 Evidence Guard 驗證規範。
 2. `data-preparation/spec.md`：MD5 校驗、哨兵值標準化、主鍵去重與空間 SiteId 修復規範。
 3. `deterministic-analytics/spec.md`：趨勢計算、多站排序與持續性基準規範。
 4. `domain-rules/spec.md`：環境部 AQI 副指標最大值、法定平均視窗與拒答守門規範。
 5. `evaluation-benchmark/spec.md`：60 題固定評測集、三模式對照與評估指標規範。
 6. `evidence-retrieval/spec.md`：測站代碼反查與時區切片檢索規範。
+7. `github-openspec-integration/spec.md`：GitHub Actions CI 自動化驗證規範。
+8. `overleaf-draft/spec.md`：Overleaf 論文草稿與 MCP 工具協作規範。
 
-### 2. 建立 DIC4 專屬變更提案 (Active Change)
-已在 [myplane/openspec/changes/dic4-overleaf-ieee-conference/](file:///c:/Users/user/Downloads/fjdsflds/AIOC-DIC3-ProjectRefactor/myplane/openspec/changes/dic4-overleaf-ieee-conference/) 建立標準變更產物：
-- `.openspec.yaml`：變更定義與 schema 宣告。
-- `proposal.md`：DIC4 需求動機與預期影響。
-- `design.md`：IEEE 論文架構、Overleaf MCP 伺服器設計與 CI/CD 機制。
-- `tasks.md`：完整可追蹤之任務清單。
-- `specs/overleaf-draft/spec.md`：Overleaf 論文草稿規格。
-- `specs/github-openspec-integration/spec.md`：GitHub Actions 與規格同步規格。
+### 2. 規格清理與歷史歸檔 (Archived Changes)
+已落實 OpenSpec 標準變更歸檔機制，將完成之提案與增量規格安全存檔至 [myplane/openspec/changes/archive/](file:///c:/Users/user/Downloads/fjdsflds/AIOC-DIC3-ProjectRefactor/myplane/openspec/changes/archive/)，確保 `changes/` 根目錄乾淨且無重複檔案：
+- `2026-11-25-taiwan-aqi-evidence-agent/`：DIC3 核心架構提案與任務記錄。
+- `2026-11-25-dic4-overleaf-ieee-conference/`：DIC4 研討會論文與 MCP 工具整合記錄。
 
 ### 3. GitHub Actions CI 自動化工作流
 已於根目錄建立 [`.github/workflows/openspec-verify.yml`](file:///c:/Users/user/Downloads/fjdsflds/AIOC-DIC3-ProjectRefactor/.github/workflows/openspec-verify.yml)：

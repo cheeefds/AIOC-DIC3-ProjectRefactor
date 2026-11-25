@@ -11,17 +11,19 @@ OpenSpec 將軟體生命週期清晰區分為「**系統當前權威規格（Mai
 ```
 myplane/openspec/
 ├── config.yaml                     # OpenSpec 全域配置（定義 schema 與規範）
-├── specs/                          # 🌟 系統當前權威規格庫 (Main Specs on GitHub)
+├── specs/                          # 🌟 系統當前權威規格庫 (Main Specs on GitHub, 8 項全數收錄)
 │   ├── agent-workflow/spec.md      # Agent 工作流與 Evidence Guard 核心規格
 │   ├── data-preparation/spec.md   # 資料清洗、去重與衝突隔離規格
 │   ├── deterministic-analytics/spec.md # 確定性數值運算與基準規格
 │   ├── domain-rules/spec.md        # 環境部 AQI 法定規則與守門規格
 │   ├── evaluation-benchmark/spec.md# 60 題評測集與多模式評估規格
-│   └── evidence-retrieval/spec.md  # 測站解析與切片檢索規格
-└── changes/                        # 🚀 進行中之功能變更 (Active Changes)
-    ├── archive/                    # 已完成並歸檔之變更歷史
-    ├── taiwan-aqi-evidence-agent/  # DIC3 完成之基準核心變更
-    └── dic4-overleaf-ieee-conference/ # DIC4 研討會論文與 MCP 變更
+│   ├── evidence-retrieval/spec.md  # 測站解析與切片檢索規格
+│   ├── github-openspec-integration/spec.md # GitHub Actions CI 自動化驗證規格
+│   └── overleaf-draft/spec.md      # Overleaf 論文與 MCP 工具協作規格
+└── changes/                        # 🚀 變更管理目錄
+    └── archive/                    # 📦 已完成並歸檔之變更歷史
+        ├── 2026-11-25-taiwan-aqi-evidence-agent/     # DIC3 核心變更歸檔
+        └── 2026-11-25-dic4-overleaf-ieee-conference/ # DIC4 研討會變更歸檔
 ```
 
 ---
