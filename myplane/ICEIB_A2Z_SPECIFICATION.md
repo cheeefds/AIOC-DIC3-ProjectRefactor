@@ -73,14 +73,35 @@
 
 ---
 
-## 🛠️ 三、OpenSpec 指令操作與驗證狀態
+## 📂 三、OpenSpec 模組化變更架構 (Modular Changes)
 
-目前在 `myplane` 目錄下：
+為避免單一提案過於龐大（Too large），OpenSpec 已依章節拆分為 7 個獨立的模組化變更（Changes）：
+
+1. **`000-abstract`**：負責摘要結構（A~F：動機、挑戰、解藥、方法、實驗、發現）與 250 字檢驗。
+2. **`001-introduction`**：負責緒論邏輯（G~L：現況、挑戰、文獻、評論、四大貢獻、章節架構）。
+3. **`002-related-work`**：負責文獻分類（M~O：方法分類、Research Gap、六欄 Table I 摘要表）。
+4. **`003-proposed-design`**：負責系統設計（PA~PM：目標、資料基底、文字計算分離、九大階段、14 行 Algorithm 1 虛擬碼）。
+5. **`004-experiment`**：負責實驗與評估（Q~U：四大評估指標、三模式對照、60 題基準集、Table II 績效表）。
+6. **`005-conclusion`**：負責結論撰寫（W~Z：研究總結、專精優勢、實體產出、證據邊界與未來展望）。
+7. **`006-reference`**：負責參考文獻管理（收錄完整 14 篇重點期刊與環境部法規之標準 BibTeX）。
+
+---
+
+## 🛠️ 四、OpenSpec 指令操作與驗證狀態
+
+目前在 `myplane` 目錄下執行全驗證：
 ```powershell
 cmd /c "cd AIOC-DIC3-ProjectRefactor\myplane && openspec validate --all"
 ```
 **驗證結果**：
 ```
+✓ change/000-abstract
+✓ change/001-introduction
+✓ change/002-related-work
+✓ change/003-proposed-design
+✓ change/004-experiment
+✓ change/005-conclusion
+✓ change/006-reference
 ✓ spec/agent-workflow
 ✓ spec/data-preparation
 ✓ spec/deterministic-analytics
@@ -88,8 +109,7 @@ cmd /c "cd AIOC-DIC3-ProjectRefactor\myplane && openspec validate --all"
 ✓ spec/evaluation-benchmark
 ✓ spec/evidence-retrieval
 ✓ spec/github-openspec-integration
-✓ change/iceib-academic-paper
 ✓ spec/overleaf-draft
-Totals: 9 passed, 0 failed (9 items)
+Totals: 15 passed, 0 failed (15 items)
 ```
-OpenSpec 規格已全面通過檢查，可直接透過 GitHub PR 進行後續維護與同步。
+OpenSpec 7 大模組化章節變更已全面通過檢查。

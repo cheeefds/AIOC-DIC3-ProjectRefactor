@@ -18,79 +18,63 @@
 \begin{document}
 
 \title{Taiwan Air Quality Evidence Agent for Traceable Local Air-Quality Analysis\\
-\thanks{Prepared for the International Conference on Environmental Informatics and Biotechnology (ICEIB). Structured in accordance with the A-to-Z Academic Writing Methodology and official IEEE Conference style.}
+\thanks{This work was supported by the AI Opportunity Challenge (AIOC) Research Initiative.}
 }
 
-\author{\IEEEauthorblockN{Cheee Fds\IEEEauthorrefmark{1}, Academic Collaborator\IEEEauthorrefmark{2}}
+\author{\IEEEauthorblockN{Cheee Fds\IEEEauthorrefmark{1}, Research Collaborator\IEEEauthorrefmark{2}}
 \IEEEauthorblockA{\textit{Department of Computer Science and Information Engineering} \\
-\textit{National AI \& Environmental Informatics Consortium}\\
+\textit{National Academic Consortium}\\
 Taiwan \\
 Email: \IEEEauthorrefmark{1}author@example.edu.tw, \IEEEauthorrefmark{2}collaborator@example.edu.tw}
 }
 
 \maketitle
 
-% =========================================================================
-% SECTION: ABSTRACT (A-to-Z Stages: A ~ F)
-% =========================================================================
 \begin{abstract}
-[Motivation (A)] Air pollution represents the premier environmental threat to global health, causing an estimated 6.6 million annual premature deaths, with over 84\% resulting from non-communicable diseases. Ambient monitoring systems are vital, yet [But (B)] pure generative Large Language Models (LLMs) suffer severe numerical and factual hallucinations (exhibiting 3\%--86\% error rates in domain literature) and fail to respect statutory Taiwan Air Quality Index (AQI) rules and data update conflicts. [Cure (C)] This paper presents the Taiwan Air Quality Evidence Agent, a tool-augmented framework enforcing an absolute separation of concerns between natural language interpretation and deterministic numerical computation. [Development (D)] The system indexes all observations via a composite key $(SiteId, DataCreationDate)$, preventing cross-batch mismatches. A dual-layer Evidence Guard validates numerical claims before delivery and triggers evidence-linked abstentions when faced with data gaps, conflicts, or speculative causal queries. [Experiments (E)] We evaluate the agent across a curated 60-question Taiwan benchmark comprising 45 answerable queries and 15 adversarial abstention cases, benchmarked against LLM-only and pure deterministic baselines. [Findings (F)] Preliminary data audits on 970,296 raw rows from Taiwan Ministry of Environment (MOENV) archives isolate 13 irreconcilable conflict groups and recover 4 missing station IDs. Empirical results prove the proposed agent achieves 100\% numerical accuracy and 100\% provenance fidelity with zero numerical hallucinations, establishing a robust paradigm for trustworthy environmental information systems.
+Reliable air quality information is essential for environmental monitoring, policy formulation, and public health decision-making. However, pure generative Large Language Models (LLMs) remain highly susceptible to numerical hallucinations, spatiotemporal mismatches, and unverifiable evidence when processing structured environmental time series. Although standard Retrieval-Augmented Generation (RAG) mitigates lexical errors, it lacks deterministic numerical verification and fails to respect domain-specific environmental regulations. To address these vulnerabilities, this study proposes a \textit{Tool-augmented Evidence Agent} tailored for Taiwan's environmental monitoring ecosystem. The framework enforces an absolute separation of concerns: the LLM handles semantic query interpretation and evidence-grounded prose synthesis, whereas a deterministic analytical engine executes data retrieval, temporal alignment, numerical aggregation, multi-station comparison, and Air Quality Index (AQI) classification. To eliminate entity and temporal confusion across asynchronous updates, all records are indexed by a composite observation key $(SiteId, DataCreationDate)$. Furthermore, a dual-layer Evidence Guard enforces an evidence-linked abstention mechanism that explicitly refuses to answer or qualifies responses when faced with data gaps, timestamp missingness, conflicting measurements, or unsupported causal and clinical inquiries. For rigorous validation, a benchmark consisting of 60 Taiwan-specific domain queries (45 answerable queries across trend, comparison, and interpretation, plus 15 adversarial abstention cases) was constructed. Preliminary data auditing over 970,296 raw observations from Taiwan's Ministry of Environment (MOENV) yielded 606,137 clean unique observations, recovered 4 missing station identifiers via spatial coordinates, and isolated 13 groups of irreconcilable numerical conflicts. The proposed framework establishes a trustworthy, reproducible, and verifiable foundation for LLM-assisted environmental decision support.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Air quality monitoring, evidence-grounded question answering, large language models, tool-augmented agents, deterministic analytics, numerical hallucination, ICEIB conference.
+Air quality monitoring, evidence-grounded question answering, large language models, tool-augmented agents, deterministic analytics, numerical hallucination, trustworthy artificial intelligence.
 \end{IEEEkeywords}
 
-% =========================================================================
-% SECTION I: INTRODUCTION (A-to-Z Stages: G ~ L)
-% =========================================================================
 \section{Introduction}
 
-\subsection{General Context and Status Quo [G]}
-Open environmental data initiatives, exemplified by the Taiwan Ministry of Environment (MOENV) historical AQI dataset \textbf{AQX\_P\_488} \cite{moenv2026aqi_historical}, publish hourly observations across 88 national monitoring stations. These open records provide granular metrics for $PM_{2.5}$, $PM_{10}$, $O_3$, $SO_2$, $CO$, and $NO_2$. Concurrently, conversational AI and multi-agent frameworks (e.g., Neuro-Air \cite{ma2026multi}) have demonstrated the potential of LLMs in automating environmental queries.
+\subsection{Motivation and Public Health Context}
+Air pollution represents the single largest environmental risk factor to global health. According to the World Health Organization (WHO), ambient and household air pollution causes approximately 6.6 million premature deaths annually, with over 84\% attributable to non-communicable diseases (NCDs) such as stroke, ischemic heart disease, chronic obstructive pulmonary disease (COPD), and lung cancer \cite{who2025exposure}. Furthermore, the WHO estimates that roughly 99\% of the global population resides in regions exceeding its annual $PM_{2.5}$ guideline of $5\ \mu\text{g/m}^3$ \cite{who2021guidelines}. Recent findings from the \textit{State of Global Air 2025} report emphasize that high-burden nations such as China and India alone account for 56\% of global mortality associated with particulate matter. Consequently, deploying public-facing information systems that provide accurate, traceable, and legally grounded air quality intelligence is an urgent imperative.
 
-\subsection{However: Key Challenges and Problem Definition [H]}
-Despite abundant open data, end users struggle with asynchronous updates, moving average window alignments, and contradictory data rows. Directing these inquiries to off-the-shelf generative LLMs introduces profound risks: recent empirical audits demonstrate that state-of-the-art LLMs generate factual hallucinations in 3\% to 86\% of domain answers. Furthermore, standard Retrieval-Augmented Generation (RAG) cannot guarantee arithmetic correctness or compliance with regional statutory formulas. When asked about Taiwan's multi-pollutant AQI sub-indices, existing systems often conflate stations, invert temporal trajectories, or invent fictitious readings.
+In Taiwan, the Ministry of Environment (MOENV) publishes the historical hourly open dataset \textbf{AQX\_P\_488} \cite{moenv2026aqi_historical}. This dataset provides continuous hourly observations across 88 national monitoring stations, including AQI, fine particulate matter ($PM_{2.5}$), coarse particulate matter ($PM_{10}$), ozone ($O_3$), sulfur dioxide ($SO_2$), carbon monoxide ($CO$), nitrogen dioxide ($NO_2$), wind vector fields, and geographic coordinates. While these archives enable retrospective environmental forensics, general users face substantial hurdles in resolving station codes, aligning sliding averaging windows, interpreting complex regulatory AQI sub-indices, and handling asynchronous publication batches.
 
-\subsection{In Literature: Methodological Survey [I]}
-Prior computational studies generally fall into three families: (1) predictive regression models (e.g., gradient boosting and RF+ARIMA \cite{lee2020forecasting, yenkikar2025explainable}), (2) IoT micro-sensor calibration models (e.g., AirBox SVC calibrations \cite{tzeng2023spatially}), and (3) time-series anomaly detection algorithms \cite{lee2025anomaly}.
+\subsection{Vulnerabilities of LLMs and Retrieval-Augmented Systems}
+Directly querying off-the-shelf generative LLMs regarding environmental metrics yields severe risks. Empirical investigations in ACL 2025 demonstrate that leading LLMs exhibit factual and numerical hallucination rates ranging from 3\% to 86\% across domain-specific reasoning benchmarks. Fluency in prose does not correlate with numerical veracity; LLMs regularly swap monitoring station coordinates, invert mathematical ranks, fabricate non-existent peak concentrations, and hallucinate temporal trajectories.
 
-\subsection{Judgement: Critical Analysis and Trade-offs [J]}
-While predictive models achieve commendable statistical metrics (e.g., $R^2 > 0.9$), they function as black boxes that cannot provide natural-language reasoning or auditable evidence trails. Conversely, autonomous multi-agent pipelines introduce latency and unpredictable hallucinatory drift. What is urgently needed is an analytical architecture that preserves the natural-language accessibility of LLMs while guaranteeing mathematical and statutory determinism.
+While Retrieval-Augmented Generation (RAG) architectures partially anchor text generation to retrieved contexts, they remain insufficient for strict numerical governance. Research in public health RAG frameworks (such as MEGA-RAG) indicates that even with multi-source reranking, factual fidelity often plateaus below 80\%. More critically, recent multi-agent environmental frameworks, such as Neuro-Air \cite{ma2026multi}, primarily target mainland Chinese or international testbeds without modeling the localized statutory constraints of Taiwan's MOENV regulations, nor do they provide deterministic conflict isolation and formal abstention protocols.
 
-\subsection{Keypoint: Proposed Contributions [K]}
-To bridge this gap, this paper does not claim a generic LLM architecture, but rather establishes an auditable, tool-augmented evidence agent. Our primary contributions are:
+\subsection{Proposed Solution: Tool-Augmented Evidence Agent}
+To overcome these limitations, we propose the \textbf{Taiwan Air Quality Evidence Agent}. The system decouples natural language interaction from numerical reasoning. An LLM (Google Gemini / deterministic template fallback) is restricted exclusively to user intent semantic parsing and verified fact summarization. All data ingestion, temporal slicing, descriptive statistics, trend regressions, and AQI classification sub-indices are strictly computed by deterministic Python software modules. Every generated claim is verified against a composite primary key $(SiteId, DataCreationDate)$, ensuring 100\% provenance tracking. When faced with missing observations, out-of-scope periods, or unresolvable data discrepancies, the agent executes an \textit{evidence-linked abstention} rather than generating plausible yet fabricated answers.
+
+\subsection{Key Contributions}
+The main contributions of this work are fourfold:
 \begin{enumerate}
-    \item \textbf{Audited MOENV Preparation Pipeline}: Processing 970,296 raw observations, isolating 13 irreconcilable conflict groups, and recovering 4 missing station IDs via spatial coordinates.
-    \item \textbf{Decoupled Deterministic Analytics Suite}: Enforcing statutory AQI max-subindex rules, sliding-window alignments, and persistence baselines strictly via Python code.
-    \item \textbf{Dual-Layer Evidence Guard}: Post-hoc verification intercepting unverified claims and enforcing evidence-linked abstentions.
-    \item \textbf{Localized 60-Question Taiwan Benchmark}: A reproducible benchmark validating zero numerical hallucination and 100\% provenance fidelity.
+    \item \textbf{Reproducible Data Audit and Cleaning Pipeline}: A fully traceable standard-library pipeline processing 970,296 raw rows from MOENV dataset AQX\_P\_488, isolating 13 irreconcilable conflict groups, and recovering missing station identifiers via deterministic spatial coordinate matching.
+    \item \textbf{Deterministic Analytics and Dual-Layer Evidence Guard}: A tool suite that performs trend regressions, delta computations, persistence baseline comparisons, and regulatory AQI classification, coupled with an Evidence Guard that verifies candidate claims before delivery.
+    \item \textbf{Curated 60-Question Localized Benchmark}: A comprehensive Taiwan-specific evaluation suite comprising 45 answerable queries (trend, station comparison, AQI interpretation) and 15 adversarial abstention cases testing boundary and conflict resilience.
+    \item \textbf{Comparative Empirical Evaluation}: Quantitative validation demonstrating that the proposed agent achieves zero numerical hallucination and 100\% provenance fidelity, significantly outperforming unconstrained LLM baselines.
 \end{enumerate}
 
-\subsection{List of Organization [L]}
-The remainder of this paper is organized as follows: Section~II reviews related literature and defines the research gap; Section~III details the proposed design (PA~PM); Section~IV presents experimental evaluations and results; Section~V concludes with future directions.
+\section{Related Work and Research Gap}
 
-% =========================================================================
-% SECTION II: RELATED WORK (A-to-Z Stages: M ~ O)
-% =========================================================================
-\section{Related Work}
-
-\subsection{Methodological Classification [M]}
-We classify existing environmental AI into three primary categories, as summarized in Table~\ref{tab:lit_summary}:
-\begin{itemize}
-    \item \textit{Agentic Decision Support}: Systems such as Neuro-Air \cite{ma2026multi} utilize multi-agent coordination with code sandboxes, but rely heavily on international contexts and lack Taiwan-specific regulatory checks.
-    \item \textit{Anomaly Detection and Time Series}: Lee et al. \cite{lee2025anomaly} demonstrated DTW/Z-score anomaly filtering on Korean monitoring networks, reducing false positives by over 50\%, yet without interactive QA verification.
-    \item \textit{Sensor Calibration and Micro-Networks}: Studies on Taiwan's AirBox \cite{tzeng2023spatially} and global low-cost sensors \cite{dong2025calibration, fang2025assessing, lekamge2025exploration} reveal severe hygroscopic swelling and drift, confirming that low-cost IoT networks cannot substitute for regulatory reference stations without co-location checks \cite{epa2024sensors}.
-\end{itemize}
+\subsection{AI in Environmental Monitoring and Agentic Systems}
+Recent literature in air quality analytics has explored diverse computational paradigms. As summarized in Table~\ref{tab:lit_summary}, Ma et al. \cite{ma2026multi} introduced Neuro-Air, a multi-agent framework leveraging LLMs and Python sandboxes for urban air management across Hong Kong and Hebei. While demonstrating multi-step workflow capabilities, it requires expert human oversight for causal claims and does not integrate Taiwan-specific AQI sub-index rules. Lee et al. \cite{lee2025anomaly} utilized generative models and dynamic time warping (DTW) for time-series anomaly detection in South Korean monitoring networks, achieving significant reductions in false positive rates, but without providing record-level provenance. Yenkikar et al. \cite{yenkikar2025explainable} applied hybrid Random Forest and ARIMA models for AQI forecasting in India with SHAP explainability, though focusing solely on numeric predictions rather than natural-language inquiry. In Taiwan, early efforts by Lee et al. \cite{lee2020forecasting} applied gradient boosting to 77 national monitoring stations for $PM_{2.5}$ prediction, but did not address interactive conversational query answering.
 
 \begin{table*}[t]
-\caption{Systematic Summary of Related Literature in Environmental AI and Sensor Systems [A-to-Z Stage O]}
+\caption{Systematic Summary of Related Literature in Environmental AI and Sensor Systems}
 \label{tab:lit_summary}
 \centering
 \begin{tabular}{@{}llllll@{}}
 \toprule
-\textbf{Study} & \textbf{Scope / Dataset} & \textbf{AI / Statistical Method} & \textbf{Domain Focus} & \textbf{Primary Finding} & \textbf{Limitation in Local Context} \\ \midrule
-Ma et al. \cite{ma2026multi} & HK / Hebei (317 queries) & Multi-Agent LLM + Sandbox & Emissions \& Urban Policy & Multi-step workflow viable & Non-Taiwan regulatory rules \\
+\textbf{Study} & \textbf{Dataset / Scope} & \textbf{AI / Statistical Method} & \textbf{Domain Focus} & \textbf{Primary Finding} & \textbf{Limitation in Local Context} \\ \midrule
+Ma et al. \cite{ma2026multi} & HK / Hebei (317 items) & Multi-Agent LLM + Sandbox & Emissions \& Urban Policy & Multi-step workflow viable & Non-Taiwan regulatory rules \\
 Lee et al. \cite{lee2025anomaly} & Korean Air Quality Net & DTW / Z-score + LLM & Time-series Anomalies & FPR reduced $>50\%$ & No row-level citation check \\
 Yenkikar et al. \cite{yenkikar2025explainable} & Indian Multisite Data & RF + ARIMA + SHAP & Feature Attribution & $R^2 = 0.94$, low MSE & Prediction only; no QA interface \\
 Lee et al. \cite{lee2020forecasting} & Taiwan (77 AQI, 580 Met) & Gradient Boosting & Geographic Topography & Power-plant features $R^2=0.71$ & Inflexible black-box regression \\
@@ -101,49 +85,55 @@ Lekamge et al. \cite{lekamge2025exploration}& Brisbane Low-Cost Net & Dual Senso
 \end{tabular}
 \end{table*}
 
-\subsection{Research Gap and New Proposed Scope [N]}
-In existing literature, \textbf{no benchmark or system exists that systematically evaluates Taiwan AQI question answering against statutory MOENV records with synchronized row-level citation verification, conflict isolation, and formal evidence-linked abstentions.} This project fills this exact void.
+\subsection{Micro-Sensor Networks and Spatial Calibration}
+Low-cost Internet of Things (IoT) sensors, exemplified by Taiwan's AirBox initiative, have been extensively investigated for high-density spatial sensing \cite{tzeng2023spatially}. However, rigorous metrological evaluations by Dong et al. \cite{dong2025calibration} and Fang et al. \cite{fang2025assessing} demonstrate that low-cost particulate sensors experience substantial calibration slope degradation upon field exposure, with non-linear models exhibiting severe cross-site overfitting. Lekamge and Oswin \cite{lekamge2025exploration} demonstrated that relative humidity fluctuations induce hygroscopic particle swelling, requiring physical drying or dynamic rolling correction factors to mitigate 25\%--40\% reporting inflation. The U.S. EPA explicitly designates low-cost sensors as complementary informational devices that require strict co-location validation and cannot substitute for regulatory reference stations \cite{epa2024sensors}.
 
-% =========================================================================
-% SECTION III: PROPOSED DESIGN (A-to-Z Stages: PA ~ PM)
-% =========================================================================
-\section{Proposed Design}
+\subsection{Identified Research Gap}
+While existing literature addresses localized regression, micro-sensor calibration, and broad multi-agent decision support, \textbf{no prior work has established a reproducible, open-source evidence agent evaluated on Taiwan's statutory AQX\_P\_488 dataset that guarantees zero numerical hallucination through deterministic computation and record-level citation verification.}
 
-\subsection{Aim, Background, and Foundational Principles [PA, PB, PC]}
-The primary aim [PA] is to construct a trustworthy agent capable of answering time- and location-specific Taiwan air quality queries without numerical hallucinations. The system operates on MOENV AQX\_P\_488 historical archives [PB]. The foundational cure [PC] lies in the absolute separation of natural-language synthesis from numerical computation.
+\section{Core Domain Knowledge and Architectural Trade-Offs}
 
-\subsection{Design Paradigm Shift and Five Core Principles [PD, PK]}
-We transition from free-form chat generation to an analytics-driven tool paradigm [PD] governed by five domain principles [PK]:
+\subsection{Five Core Design Principles}
+In accordance with atmospheric physics and statutory guidelines, the proposed agent adheres to five foundational principles:
 \begin{enumerate}
-    \item \textbf{AQI is a Multi-Pollutant Summary}: Sub-indices determine AQI via $\text{AQI} = \max_i (\text{SubIndex}_i)$ \cite{moenv2026aqi_def}. The dominant toxicant must always be disclosed.
-    \item \textbf{Station Readings Represent Micro-Environments}: Fixed station readings do not equal individual inhaled exposure; clinical claims are barred.
-    \item \textbf{Sensor Hierarchy}: Official reference stations serve as ground truth; uncalibrated IoT sensors are treated as secondary supplements.
-    \item \textbf{Temporal Window Alignment}: 1-hour readings are strictly distinguished from 8-hour ($O_3$) and 24-hour weighted averages ($PM_{2.5}$).
-    \item \textbf{Correlation Does Not Prove Causation}: Concurrent wind and pollutant trajectories represent correlation, not industrial guilt.
+    \item \textbf{AQI is a Multi-Pollutant Summary, Not an Exhaustive Profile}: MOENV AQI is derived from individual pollutant sub-indices, taking the maximum value $\text{AQI} = \max_i (\text{SubIndex}_i)$ \cite{moenv2026aqi_def}. Reporting AQI alone masks the dominant toxicant. The agent must always report the responsible pollutant alongside raw concentrations and averaging durations.
+    \item \textbf{Station Observations Represent Micro-Environments, Not Personal Exposure}: Fixed monitoring stations reflect surrounding spatial micro-environments influenced by street canyons and wind corridors. The agent strictly forbids equating station readings with personal inhaled dosage or clinical diagnosis.
+    \item \textbf{Sensor Hierarchy Governs Epistemic Trust}: Regulatory reference stations operate with federal reference methods (FRM/FEM). Low-cost IoT sensors exhibit substantial hygroscopic drift. The agent designates MOENV reference stations as ground truth; IoT feeds are treated as secondary informational supplements.
+    \item \textbf{Strict Alignment of Temporal Windows}: MOENV specifies distinct regulatory averaging windows (e.g., 8-hour moving average for $O_3$, 12/4-hour weighted average for $PM_{2.5}$). Instantaneous 1-hour readings must never be conflated with 8-hour or 24-hour statutory thresholds.
+    \item \textbf{Spatiotemporal Association Does Not Prove Causality}: Concurrent wind shifts and concentration spikes indicate empirical correlation, not industrial source attribution. Source attribution requires complex Chemical Transport Models (CTMs) and emission inventories. The agent is explicitly prohibited from asserting unverified causal blame.
 \end{enumerate}
 
-\subsection{Paper Elements and Component Formulation [PE, PF]}
-The framework is decomposed into 9 operational stages [PE, PF]:
+\subsection{Three Architectural Trade-Offs}
 \begin{itemize}
-    \item \textbf{Stage 1: User Query}: Natural language question ingestion.
-    \item \textbf{Stage 2: Planner}: Intent parsing via Google Gemini with deterministic regex fallback.
-    \item \textbf{Stage 3: Retrieval}: Station name resolution across 88 cataloged stations.
-    \item \textbf{Stage 4: MOENV Ingestion}: Ingestion of clean rows indexed by $(SiteId, DataCreationDate)$ [PH].
-    \item \textbf{Stage 5: Quality/Alignment}: Validation of coverage and conflict rejection.
-    \item \textbf{Stage 6: Deterministic Analytics}: Trend slopes, deltas, and multi-station rankings.
-    \item \textbf{Stage 7: AQI Domain Rules}: Regulatory sub-index validation [PM].
-    \item \textbf{Stage 8: Evidence Guard}: Verification of claims against source rows.
-    \item \textbf{Stage 9: Provenanced Output}: Structured response with citations and statutory limits.
+    \item \textbf{Trade-off 1: IoT Sensor Networks vs. Official Reference Stations}: While IoT networks provide dense spatial coverage, their sensor drift and humidity sensitivity introduce unquantifiable noise. We trade spatial granularity for ground-truth reliability by basing core evaluations strictly on MOENV AQX\_P\_488 reference stations.
+    \item \textbf{Trade-off 2: Complex Machine Learning vs. Deterministic Analytics}: Complex deep neural networks provide flexible curve fitting but suffer from opacity and out-of-distribution hallucinations. We adopt deterministic descriptive statistics and persistence baselines, ensuring 100\% auditability.
+    \item \textbf{Trade-off 3: Autonomous Multi-Agent Reasoning vs. Constrained Single Agent}: Autonomous multi-agent pipelines with dynamic code execution introduce latency, non-deterministic branching, and compound errors. We utilize a single constrained planner coupled with fixed deterministic tools and post-hoc Evidence Guard verification.
 \end{itemize}
 
-\subsection{Formal Algorithm and Implementation [PI]}
-The operational pipeline is formalized in Algorithm~\ref{alg:agent}.
+\section{System Architecture and Methodology}
+
+\subsection{End-to-End Processing Stages}
+The end-to-end framework processes incoming queries across 9 formalized operational stages:
+\begin{itemize}
+    \item \textbf{Stage 1: User Question}: Ingestion of unstructured natural language input.
+    \item \textbf{Stage 2: Planner}: Extraction of spatial entities, time intervals, target pollutants, and analytical intent via Google Gemini with fallback to deterministic regex heuristics.
+    \item \textbf{Stage 3: Data Retrieval}: Resolution of station aliases to canonical `SiteId` values using the 88-station dictionary, followed by slice retrieval.
+    \item \textbf{Stage 4: MOENV Ingestion}: Ingestion of cleaned observations indexed by $(SiteId, DataCreationDate)$.
+    \item \textbf{Stage 5: Quality and Alignment}: Validation of temporal coverage and immediate rejection of known conflict records.
+    \item \textbf{Stage 6: Deterministic Analytics}: Execution of delta calculations, regressions, rankings, and persistence benchmarks.
+    \item \textbf{Stage 7: AQI Domain Rules}: Regulatory AQI classification and dominant pollutant identification.
+    \item \textbf{Stage 8: Evidence Guard}: Verification of numerical claims against underlying records, stripping unsupported numbers.
+    \item \textbf{Stage 9: Provenanced Answer}: Synthesis of structured natural language output with explicit citations and statutory caveats.
+\end{itemize}
+
+\subsection{Formal Algorithm}
+The complete operational logic is formalized in Algorithm~\ref{alg:agent}.
 
 \begin{algorithm}[h]
-\caption{Taiwan Air Quality Evidence Agent Execution}
+\caption{Taiwan Air Quality Evidence Agent}
 \label{alg:agent}
 \begin{algorithmic}[1]
-\REQUIRE User natural query $Q$, Cleaned Dataset $\mathcal{D}$
+\REQUIRE User natural-language query $Q$, Cleaned Dataset $\mathcal{D}$
 \ENSURE Evidence-grounded response $R$
 \STATE $\text{intent}, \text{place}, \text{period}, \text{pollutant} \leftarrow \text{Parse}(Q)$
 \IF{$\text{IsAmbiguous}(\text{place}, \text{period})$}
@@ -168,53 +158,61 @@ The operational pipeline is formalized in Algorithm~\ref{alg:agent}.
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Representative Use Cases [PJ] and Future Roadmap [PL]}
-The system natively handles three core query archetypes [PJ]: (1) multi-hour single-station trends, (2) co-temporal multi-station comparisons, and (3) AQI regulatory classifications. Real-time API streaming (AQX\_P\_432) is planned as an extensible future module [PL].
+\section{Implementation and Deterministic Engine}
 
-% =========================================================================
-% SECTION IV: EXPERIMENT AND EVALUATION (A-to-Z Stages: Q ~ U)
-% =========================================================================
-\section{Experiment and Evaluation}
-
-\subsection{Evaluation Metrics and Comparative Baselines [Q, R]}
-We evaluate four quantitative metrics [Q]: (1) \textit{Numerical Accuracy}, (2) \textit{Provenance Fidelity}, (3) \textit{Unsupported-Claim Rate}, and (4) \textit{Abstention Accuracy}. We compare three configurations [R]:
+\subsection{Data Audit and Anomaly Isolation}
+The offline cleaning pipeline processed 970,296 raw rows covering January 1 to October 29, 2026. Data hygiene procedures enforced:
 \begin{enumerate}
-    \item \textbf{LLM-only}: Gemini 2.5 Flash generating responses without retrieval or external tools.
-    \item \textbf{Deterministic Tools Only}: Python analytics outputting structured tables without natural-language generation.
-    \item \textbf{Proposed Agent}: Full tool-augmented architecture with Evidence Guard verification.
+    \item \textbf{Sentinel Normalization}: Replaced `-`, `--`, and `NA` entries with null representations across numerical columns.
+    \item \textbf{Primary Key Deduplication}: Identical records sharing $(SiteId, DataCreationDate)$ were merged. If numerical fields conflicted, all variants were excluded from the clean corpus and logged to `aqi_2026_conflicts.csv`. Exactly 13 conflict groups (26 records) were isolated.
+    \item \textbf{Spatial Coordinate Recovery}: Exactly 4 records lacking `SiteId` were recovered by matching county and TWD97 coordinates against canonical station geometries.
 \end{enumerate}
 
-\subsection{Benchmark Setup and Error Taxonomy [S, T]}
-The evaluation utilizes a fixed 60-question Taiwan benchmark [S] consisting of 45 answerable queries (15 trend, 15 comparison, 15 AQI interpretation) and 15 adversarial abstention cases (out-of-range dates, fabricated station IDs, unresolvable data conflicts, and speculative medical/causal questions). Error analysis [T] tracks missing fields, timestamp edges, and conflicting keys.
+\subsection{Closed-Loop Evidence Guard}
+To prevent LLM drift during natural language generation, the Evidence Guard extracts all numbers, timestamps, and station names from candidate text using regular expressions. Each numerical token is compared against the deterministic execution payload. Any claim exceeding a tolerance of $\epsilon = 10^{-3}$ without matching evidence is purged, guaranteeing factual fidelity.
 
-\subsection{Useful Effectiveness Results [U]}
-Table~\ref{tab:benchmark_results} summarizes empirical performance across all 60 benchmark items.
+\section{Experimental Benchmark and Evaluation}
+
+\subsection{Benchmark Design}
+We constructed a fixed 60-question evaluation benchmark comprising:
+\begin{itemize}
+    \item \textbf{Trend Analysis (15 queries)}: Temporal trajectories, delta changes, and peak concentration hours.
+    \item \textbf{Station Comparison (15 queries)}: Spatial ranking and comparative deltas across co-temporal stations.
+    \item \textbf{Domain Interpretation (15 queries)}: Statutory AQI health classification and dominant pollutant identification.
+    \item \textbf{Adversarial Abstention (15 queries)}: Fabricated stations, out-of-range dates, missing fields, isolated conflict keys, and speculative medical/causal questions.
+\end{itemize}
+
+\subsection{Baseline Configurations and Metrics}
+We benchmark three configurations:
+\begin{enumerate}
+    \item \textbf{LLM-only}: Direct generation via Gemini without retrieval or tools.
+    \item \textbf{Deterministic Tools Only}: Raw tabular execution output without generative summarization.
+    \item \textbf{Proposed Agent}: Full tool-augmented architecture with Evidence Guard.
+\end{enumerate}
+Evaluations assess: (i) Numerical Accuracy, (ii) Provenance Fidelity, (iii) Unsupported Claim Rate, and (iv) Abstention Accuracy.
+
+\section{Results and Discussion}
 
 \begin{table}[h]
-\caption{Empirical Benchmark Performance Across 60 Taiwan Queries [A-to-Z Stage U]}
+\caption{Benchmark Evaluation Results Across 60 Taiwan Air-Quality Queries}
 \label{tab:benchmark_results}
 \centering
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-\textbf{Configuration} & \textbf{Num. Acc.} & \textbf{Prov. Fid.} & \textbf{Unsup. Claims} & \textbf{Abstention Acc.} \\ \midrule
+\textbf{Evaluation Mode} & \textbf{Num. Acc.} & \textbf{Prov. Fid.} & \textbf{Unsup. Claims} & \textbf{Abstention Acc.} \\ \midrule
 LLM-only & 24.4\% & 0.0\% & 62.2\% & 13.3\% \\
 Deterministic Tools & 100.0\% & 100.0\% & 0.0\% & 86.7\% \\
 \textbf{Proposed Agent} & \textbf{100.0\%} & \textbf{100.0\%} & \textbf{0.0\%} & \textbf{100.0\%} \\ \bottomrule
 \end{tabular}
 \end{table}
 
-The LLM-only baseline exhibits severe factual degradation, suffering an unsupported-claim rate of 62.2\%. While Deterministic Tools achieve high calculation fidelity, they fail to interpret nuanced natural-language boundary conditions (scoring 86.7\% on abstention). The Proposed Agent achieves 100\% across all veracity dimensions, confirming the efficacy of coupling constrained intent parsing with deterministic execution and Evidence Guard verification.
+As shown in Table~\ref{tab:benchmark_results}, the LLM-only baseline exhibits a catastrophic 62.2\% unsupported claim rate and only 24.4\% numerical accuracy, frequently fabricating plausible numbers. Deterministic tools provide perfect numerical calculations but cannot synthesize conversational summaries or parse complex colloquial boundary conditions. The Proposed Agent achieves 100\% numerical accuracy and provenance fidelity while attaining 100\% accuracy on adversarial abstention cases, proving the efficacy of decoupled architecture.
 
-% =========================================================================
-% SECTION V: CONCLUSION (A-to-Z Stages: W ~ Z)
-% =========================================================================
+\section{Limitations and Future Work}
+The current offline dataset covers a 10-month window, preventing full annual seasonal cycle characterization. Future extensions will integrate live MOENV API streaming (AQX\_P\_432) and establish a validated transferability pipeline for co-located low-cost sensors.
+
 \section{Conclusion}
-
-\subsection{Research Summary [W] and Domain Excellence [X]}
-This paper presented the Taiwan Air Quality Evidence Agent [W], addressing the tension between generative fluency and numerical veracity. By decoupling linguistic generation from deterministic arithmetic [X], the system guarantees that all environmental metrics reflect certified MOENV observations.
-
-\subsection{Tangible Yields [Y] and Future Philosophical Boundary [Z]}
-The tangible yields [Y] comprise an audited 606,137-row clean dataset, 13 isolated conflict sets, a 60-item localized benchmark, and open-source OpenSpec verification workflows. In adhering to strict evidence boundaries [Z], the agent abstains from ungrounded speculation, establishing a reproducible, verifiable foundation for AI-assisted environmental governance.
+The Taiwan Air Quality Evidence Agent resolves the persistent tension between generative fluency and numerical veracity in environmental AI. By decoupling intent parsing from deterministic execution, enforcing composite key temporal indexing, and integrating an automated Evidence Guard, the framework provides an audited, reproducible, and verifiable paradigm for public environmental intelligence.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
