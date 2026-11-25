@@ -26,8 +26,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install OpenSpec CLI
-        run: npm install -g @openspec/cli
+      - name: Install OpenSpec
+        run: npm install -g @fission-ai/openspec@latest
 
       - name: Validate OpenSpec Artifacts in myplane
         run: |
