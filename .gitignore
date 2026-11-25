@@ -34,3 +34,8 @@ tmp/
 Thumbs.db
 .vscode/
 .idea/
+
+# OverleafMCP credentials - DO NOT COMMIT real credentials
+# projects.json contains Overleaf tokens; use projects.json.example as template
+# myplane/overleaf_draft/projects.json (tracked as template with placeholders)
+overleaf-mcp-credentials.json

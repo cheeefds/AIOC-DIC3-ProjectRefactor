@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": {
+      "name": "Taiwan Air Quality Evidence Agent (ICEIB)",
+      "projectId": "YOUR_OVERLEAF_PROJECT_ID",
+      "gitToken": "YOUR_OVERLEAF_GIT_TOKEN"
+    }
+  }
+}
