@@ -70,7 +70,10 @@ Recent literature in air quality analytics has explored diverse computational pa
 \begin{table*}[t]
 \caption{Systematic Summary of Related Literature in Environmental AI and Sensor Systems}
 \label{tab:lit_summary}
-\centering
+\vspace{2pt}
+\noindent\hspace*{-0.5cm}% 將表格往左平移
+\setlength{\tabcolsep}{2.8pt}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llllll@{}}
 \toprule
 \textbf{Study} & \textbf{Dataset / Scope} & \textbf{AI / Statistical Method} & \textbf{Domain Focus} & \textbf{Primary Finding} & \textbf{Limitation in Local Context} \\ \midrule
@@ -82,7 +85,8 @@ Tzeng et al. \cite{tzeng2023spatially} & Taiwan AirBox IoT & Spatially Adaptive 
 Dong et al. \cite{dong2025calibration} & Co-located Sensors & Linear / Non-linear Reg. & Humidity / Sensor Drift & Non-linear models overfit & Poor cross-site generalization \\
 Fang et al. \cite{fang2025assessing} & Longitudinal IoT (19 units)& Pre/Post Deployment Reg. & Sensor Aging \& Drift & Calibration slope degrades & Confined to indoor microclimate \\
 Lekamge et al. \cite{lekamge2025exploration}& Brisbane Low-Cost Net & Dual Sensors + Dryer Tube & Relative Humidity (RH) Bias & RH correction reduces 25\% bias & Short duration; unverified cross-season \\ \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table*}
 
 \subsection{Micro-Sensor Networks and Spatial Calibration}
