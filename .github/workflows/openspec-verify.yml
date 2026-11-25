@@ -1,0 +1,35 @@
+name: OpenSpec Specification & Change Validation
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - '**/openspec/**'
+      - '.github/workflows/openspec-verify.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - '**/openspec/**'
+      - '.github/workflows/openspec-verify.yml'
+
+jobs:
+  validate-specs:
+    runs-on: ubuntu-latest
+    name: Validate OpenSpec Specifications & Changes
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install OpenSpec CLI
+        run: npm install -g @openspec/cli
+
+      - name: Validate OpenSpec Artifacts in myplane
+        run: |
+          cd myplane
+          openspec validate --all
